@@ -10,12 +10,12 @@ const config = {
       assets: 'build',
       fallback: 'index.html',
       precompress: false,
-      strict: true
+      strict: false  // 改为 false，允许非预渲染路由
     }),
     paths: {
       base: dev ? '' : '/kafiweb'
     },
-    trailingSlash: 'never'
+    trailingSlash: 'always'  // 改为 always，与 layout.js 一致
   }
 };
 
