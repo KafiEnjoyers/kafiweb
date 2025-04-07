@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { base } from '$app/paths';
     import { typewriterAnimation } from '$lib/textAnimation';
 
     // Metadata for SEO
@@ -24,7 +25,7 @@
     <h1 class="landing-title">Kafi Studio</h1>
 
     <div class="landing-img">
-        <img class="logo" src="/images/KafiTurtle.png" alt="Kafi Studio logo showing a turtle" />
+        <img class="logo" src="{base}/images/KafiTurtle.png" alt="Kafi Studio logo showing a turtle" />
     </div>
 
     <div id="landing-text" class="landing-text" style="visibility: hidden;">Software built different</div>
