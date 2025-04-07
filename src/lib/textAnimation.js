@@ -1,16 +1,53 @@
-// place files you want to import through the `$lib` alias in this folder.
+// Text animation utilities
 
 import { gsap } from 'gsap';
-import { SplitText } from 'gsap/SplitText';
 
-gsap.registerPlugin(SplitText);
-
-export function typewriterAnimation(elementId) {
-    const split = new SplitText(elementId, { type: "chars" });
-    gsap.from(split.chars, {
-        duration: 0.1,
-        opacity: 0,
-        stagger: 0.05,
-        ease: "power1.inOut"
-    });
+/**
+ * Creates a simple typewriter animation effect for the specified element
+ * @param {string} elementId - CSS selector for the target element
+ * @param {Object} options - Animation options
+ */
+export function typewriterAnimation(elementId, options = {}) {
+    try {
+        const element = document.querySelector(elementId);
+        if (!element) {
+            console.error(`Element with selector ${elementId} not found`);
+            return;
+        }
+        
+        // Default options
+        const config = {
+            speed: options.speed || 70,          // Typing speed in ms
+            initialDelay: options.delay || 300,  // Initial delay before typing starts
+            cursor: options.cursor !== false      // Whether to show cursor
+        };
+        
+        const text = element.textContent;
+        element.textContent = '';
+        element.style.visibility = 'visible';
+        
+        // Create and animate characters one by one
+        let charIndex = 0;
+        
+        // Add initial delay
+        setTimeout(() => {
+            const typeInterval = setInterval(() => {
+                if (charIndex < text.length) {
+                    element.textContent += text.charAt(charIndex);
+                    charIndex++;
+                } else {
+                    clearInterval(typeInterval);
+                    
+                    // Apply additional animations after typing if needed
+                    gsap.to(element, {
+                        duration: 0.5,
+                        ease: 'power1.out'
+                    });
+                }
+            }, config.speed);
+        }, config.initialDelay);
+        
+    } catch (error) {
+        console.error(`Error in typewriterAnimation: ${error.message}`);
+    }
 }
