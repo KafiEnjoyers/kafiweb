@@ -4,7 +4,7 @@
 rm -rf package-lock.json node_modules
 
 # 重新安装依赖
-npm install
+npm install --legacy-peer-deps
 
 # 提交更改
 git add .
