@@ -14,8 +14,7 @@ const config = {
     }),
     paths: {
       base: dev ? '' : '/kafiweb'
-    },
-    trailingSlash: 'always'  // 改为 always，与 layout.js 一致
+    }
   }
 };
 
