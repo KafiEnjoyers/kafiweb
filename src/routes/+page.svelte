@@ -1,7 +1,31 @@
-<script>
+    /* 首页打字机样式 */
+    .typewriter-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .typewriter-text {
+        display: inline-block;
+        min-height: 2.5rem; /* 确保高度稳定 */
+        min-width: 2ch; /* 确保宽度至少有光标空间 */
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--accent-color);
+        border-right: 3px solid var(--accent-color);
+        animation: blink-caret 0.75s step-end infinite;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    
+    @keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: var(--accent-color); }
+    }<script>
     import { onMount } from 'svelte';
     import { base } from '$app/paths';
-    import { typewriterAnimation, initTypewriter } from '$lib/textAnimation';
+    import { typewriterAnimation, initTypewriter, repeatTypewriter } from '$lib/textAnimation';
     import { fadeIn, slideUp } from '$lib/animations';
 
     // Metadata for SEO
@@ -70,6 +94,12 @@
         // 运行打字效果
         initTypewriter();
         
+        // 也可以直接在这里初始化循环打字效果
+        const typewriterElement = document.querySelector('.typewriter-text');
+        if (typewriterElement) {
+            repeatTypewriter(typewriterElement, "Software built different", 70);
+        }
+        
         // 应用其他动画
         if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
         if (servicesSection) slideUp(servicesSection, { delay: 1500, duration: 0.8 });
@@ -108,11 +138,13 @@
                 <div class="logo-glow"></div>
             </div>
             
-            <div id="landing-text" class="landing-text" style="visibility: hidden;">
-                Software built different
+            <div id="landing-text" class="landing-text typewriter-container" style="visibility: visible;">
+                <span class="typewriter-text"></span>
             </div>
             
-            <p id="tagline" class="tagline" style="visibility: hidden;">Software built different</p>
+            <p id="tagline" class="tagline" style="visibility: hidden;">
+                Start building today
+            </p>
             
             <div class="cta-buttons">
                 <a href="#contact" class="btn primary-btn">Get in touch</a>
