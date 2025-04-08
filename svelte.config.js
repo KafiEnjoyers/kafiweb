@@ -10,10 +10,13 @@ const config = {
       assets: 'build',
       fallback: 'index.html',
       precompress: false,
-      strict: false  // 改为 false，允许非预渲染路由
+      strict: false  // 允许非预渲染路由
     }),
     paths: {
       base: dev ? '' : '/kafiweb'
+    },
+    prerender: {
+      default: true
     }
   }
 };
