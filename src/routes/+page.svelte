@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { base } from '$app/paths';
-    import { typewriterAnimation } from '$lib/textAnimation';
+    import { typewriterAnimation, initTypewriter } from '$lib/textAnimation';
     import { fadeIn, slideUp } from '$lib/animations';
 
     // Metadata for SEO
@@ -31,27 +31,44 @@
     let heroSection;
     let servicesSection;
     
-    onMount(() => {
-        // 初始化主标语打字动画
-        typewriterAnimation('#landing-text', {
-            speed: 70,
-            delay: 800,
-            onComplete: (element) => {
-                // 主标语打字效果完成后的回调
-                element.classList.add('typing-done');
-                
-                // 开始副标语的打字效果
-                setTimeout(() => {
-                    typewriterAnimation('#tagline', {
-                        speed: 60,
-                        delay: 100,
-                        onComplete: (el) => {
-                            el.classList.add('typing-done');
+    // Run typing effect immediately without waiting for onMount
+    function runTypingEffect() {
+        // 确保DOM已加载
+        if (typeof document !== 'undefined') {
+            setTimeout(() => {
+                const landingText = document.querySelector('#landing-text');
+                if (landingText) {
+                    landingText.style.visibility = 'visible';
+                    typewriterAnimation('#landing-text', {
+                        speed: 70,
+                        delay: 10, // 几乎立即开始
+                        onComplete: (element) => {
+                            element.classList.add('typing-done');
+                            
+                            // 主标语结束后开始副标语
+                            setTimeout(() => {
+                                const tagline = document.querySelector('#tagline');
+                                if (tagline) {
+                                    tagline.style.visibility = 'visible';
+                                    typewriterAnimation('#tagline', {
+                                        speed: 60,
+                                        delay: 10,
+                                        onComplete: (el) => {
+                                            el.classList.add('typing-done');
+                                        }
+                                    });
+                                }
+                            }, 300);
                         }
                     });
-                }, 400); // 短暂延迟后开始副标语
-            }
-        });
+                }
+            }, 500); // 给页面一点时间加载
+        }
+    }
+    
+    onMount(() => {
+        // 运行打字效果
+        initTypewriter();
         
         // 应用其他动画
         if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
