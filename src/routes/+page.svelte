@@ -80,7 +80,7 @@
                 Software built different
             </div>
             
-            <p class="tagline">Creating innovative solutions for your digital needs</p>
+            <p class="tagline">Software built different</p>
             
             <div class="cta-buttons">
                 <a href="#contact" class="btn primary-btn">Get in touch</a>
