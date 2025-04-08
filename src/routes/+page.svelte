@@ -31,58 +31,92 @@
     let servicesSection;
     
     onMount(() => {
-        // 应用打字机效果
-        const typewriterElement = document.querySelector('.typewriter');
-        if (typewriterElement) {
-            const text = typewriterElement.getAttribute('data-text');
-            typewriterAnimation(typewriterElement, text, { speed: 120 });
-        }
-        
-        // 显示副标语
+        // 等待页面完全加载
         setTimeout(() => {
-            const tagline = document.querySelector('#tagline');
-            if (tagline) {
-                tagline.style.visibility = 'visible';
-                const taglineText = tagline.textContent.trim();
-                typewriterAnimation(tagline, taglineText, { speed: 80 });
-            }
-        }, 4000); // 等待主标题打字机效果完成
-        
-        // 自定义打字机效果函数
-        function typewriterAnimation(element, text, options = {}) {
-            if (typeof element === 'string') {
-                element = document.querySelector(element);
+            // 应用打字机效果
+            const typewriterElement = document.querySelector('.typewriter');
+            console.log('Typewriter element:', typewriterElement);
+            
+            if (typewriterElement) {
+                // 清空原有文本，重新开始打字效果
+                const text = typewriterElement.getAttribute('data-text') || 'Software built different';
+                console.log('Text to type:', text);
+                
+                // 清空初始内容
+                typewriterElement.textContent = '';
+                
+                // 开始打字效果
+                typewriterAnimation(typewriterElement, text, { speed: 120 });
             }
             
-            if (!element) return;
+            // 显示副标语
+            setTimeout(() => {
+                const tagline = document.querySelector('#tagline');
+                console.log('Tagline element:', tagline);
+                
+                if (tagline) {
+                    tagline.style.visibility = 'visible';
+                    const taglineText = tagline.textContent.trim();
+                    console.log('Tagline text:', taglineText);
+                    
+                    // 清空初始内容
+                    tagline.textContent = '';
+                    
+                    // 开始副标语打字效果
+                    typewriterAnimation(tagline, taglineText, { speed: 80 });
+                }
+            }, 4000); // 等待主标题打字机效果完成
+        }, 500); // 给页面加载留出时间
+        
+        // 简化版打字机效果函数
+        function typewriterAnimation(element, text, options = {}) {
+            console.log('Starting typewriter animation for:', element, 'with text:', text);
+            
+            if (typeof element === 'string') {
+                element = document.querySelector(element);
+                console.log('Found element by selector:', element);
+            }
+            
+            if (!element) {
+                console.error('Element not found for typewriter animation');
+                return;
+            }
+            
+            if (!text || text.length === 0) {
+                console.error('No text provided for typewriter animation');
+                return;
+            }
             
             // 默认选项
             const speed = options.speed || 100; // 打字速度
-            const onComplete = options.onComplete || null; // 完成回调
+            console.log('Typing speed:', speed);
+            
+            // 确保元素可见
+            element.style.visibility = 'visible';
             
             // 清空元素内容
             element.textContent = '';
-            element.style.visibility = 'visible';
             
             // 逐字添加文本
             let i = 0;
-            
-            function typeNextChar() {
+            let typewriterInterval = setInterval(() => {
                 if (i < text.length) {
                     element.textContent += text.charAt(i);
                     i++;
-                    setTimeout(typeNextChar, speed);
+                    console.log('Typed:', element.textContent);
                 } else {
                     // 打字完成
+                    clearInterval(typewriterInterval);
                     element.classList.add('typing-done');
-                    if (typeof onComplete === 'function') {
-                        onComplete(element);
-                    }
+                    console.log('Typing completed for:', element);
                 }
-            }
+            }, speed);
             
-            // 开始打字
-            typeNextChar();
+            // 返回一个停止函数，以便必要时可以停止动画
+            return () => {
+                clearInterval(typewriterInterval);
+                console.log('Typing animation stopped');
+            };
         }
 
         // 应用其他动画
@@ -121,7 +155,7 @@
     .typewriter {
         display: inline-block;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         border-right: 3px solid var(--accent-color);
         white-space: nowrap;
         margin: 0 auto;
@@ -594,7 +628,7 @@
             </div>
             
             <div id="landing-text" class="landing-text">
-                <span class="typewriter" data-text="Software built different"></span>
+                <span class="typewriter" data-text="Software built different">Software built different</span>
             </div>
             
             <p id="tagline" class="tagline" style="visibility: hidden;">
