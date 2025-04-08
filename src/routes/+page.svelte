@@ -95,7 +95,7 @@
                 Software built different
             </div>
             
-            <p id="tagline" class="tagline" style="visibility: hidden;">Building innovative solutions</p>
+            <p id="tagline" class="tagline" style="visibility: hidden;">Software built different</p>
             
             <div class="cta-buttons">
                 <a href="#contact" class="btn primary-btn">Get in touch</a>
@@ -231,6 +231,7 @@
         content: '|';
         margin-left: 5px;
         opacity: 1;
+        color: var(--accent-color);
         animation: cursor-blink 1s infinite;
     }
     
@@ -253,6 +254,7 @@
         content: '|';
         margin-left: 2px;
         opacity: 1;
+        color: var(--secondary-color);
         animation: cursor-blink 1s infinite;
     }
     
