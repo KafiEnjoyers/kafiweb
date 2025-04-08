@@ -78,6 +78,19 @@
         color: var(--accent-color);
         position: relative;
         text-align: center;
+        animation: fadeInUp 1.2s ease-out forwards;
+        opacity: 0;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     .hero-section {
         min-height: 100vh;
