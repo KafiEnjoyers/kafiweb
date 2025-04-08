@@ -31,97 +31,17 @@
     let servicesSection;
     
     onMount(() => {
-        // 等待页面完全加载
-        setTimeout(() => {
-            // 应用打字机效果
-            const typewriterElement = document.querySelector('.typewriter');
-            console.log('Typewriter element:', typewriterElement);
-            
-            if (typewriterElement) {
-                // 清空原有文本，重新开始打字效果
-                const text = typewriterElement.getAttribute('data-text') || 'Software built different';
-                console.log('Text to type:', text);
-                
-                // 清空初始内容
-                typewriterElement.textContent = '';
-                
-                // 开始打字效果
-                typewriterAnimation(typewriterElement, text, { speed: 120 });
-            }
-            
-            // 显示副标语
-            setTimeout(() => {
-                const tagline = document.querySelector('#tagline');
-                console.log('Tagline element:', tagline);
-                
-                if (tagline) {
-                    tagline.style.visibility = 'visible';
-                    const taglineText = tagline.textContent.trim();
-                    console.log('Tagline text:', taglineText);
-                    
-                    // 清空初始内容
-                    tagline.textContent = '';
-                    
-                    // 开始副标语打字效果
-                    typewriterAnimation(tagline, taglineText, { speed: 80 });
-                }
-            }, 4000); // 等待主标题打字机效果完成
-        }, 500); // 给页面加载留出时间
-        
-        // 简化版打字机效果函数
-        function typewriterAnimation(element, text, options = {}) {
-            console.log('Starting typewriter animation for:', element, 'with text:', text);
-            
-            if (typeof element === 'string') {
-                element = document.querySelector(element);
-                console.log('Found element by selector:', element);
-            }
-            
-            if (!element) {
-                console.error('Element not found for typewriter animation');
-                return;
-            }
-            
-            if (!text || text.length === 0) {
-                console.error('No text provided for typewriter animation');
-                return;
-            }
-            
-            // 默认选项
-            const speed = options.speed || 100; // 打字速度
-            console.log('Typing speed:', speed);
-            
-            // 确保元素可见
-            element.style.visibility = 'visible';
-            
-            // 清空元素内容
-            element.textContent = '';
-            
-            // 逐字添加文本
-            let i = 0;
-            let typewriterInterval = setInterval(() => {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                    console.log('Typed:', element.textContent);
-                } else {
-                    // 打字完成
-                    clearInterval(typewriterInterval);
-                    element.classList.add('typing-done');
-                    console.log('Typing completed for:', element);
-                }
-            }, speed);
-            
-            // 返回一个停止函数，以便必要时可以停止动画
-            return () => {
-                clearInterval(typewriterInterval);
-                console.log('Typing animation stopped');
-            };
-        }
-
         // 应用其他动画
         if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
         if (servicesSection) slideUp(servicesSection, { delay: 1500, duration: 0.8 });
+        
+        // 显示副标语
+        setTimeout(() => {
+            const tagline = document.querySelector('#tagline');
+            if (tagline) {
+                tagline.classList.add('visible');
+            }
+        }, 3500); // 等待主标题打字机效果完成
         
         // Animate service cards on scroll
         const observer = new IntersectionObserver((entries) => {
@@ -150,18 +70,22 @@
         color: var(--accent-color);
         position: relative;
         text-align: center;
-    }
-    
-    .typewriter {
-        display: inline-block;
-        position: relative;
-        overflow: visible;
-        border-right: 3px solid var(--accent-color);
+        width: max-content;
+        margin-left: auto;
+        margin-right: auto;
+        border-right: 0.15em solid var(--accent-color);
+        overflow: hidden;
         white-space: nowrap;
-        margin: 0 auto;
-        animation: blink-caret 0.75s step-end infinite;
+        animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
     }
     
+    /* 打字机动画 */
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+      
+    /* 闪烁光标动画 */
     @keyframes blink-caret {
         from, to { border-color: transparent }
         50% { border-color: var(--accent-color) }
@@ -237,27 +161,24 @@
         line-height: 1.6;
         color: var(--secondary-color);
         position: relative;
-        border-right: 2px solid var(--secondary-color);
+        visibility: hidden;
+        width: max-content;
+        margin-left: auto;
+        margin-right: auto;
         white-space: nowrap;
         overflow: hidden;
-        display: inline-block;
-        animation: blink-caret-secondary 0.75s step-end infinite;
+        border-right: 0.15em solid var(--secondary-color);
+    }
+    
+    /* 副标语显示后的动画类 */
+    .tagline.visible {
+        visibility: visible;
+        animation: typing 2.5s steps(40, end), blink-caret-secondary .75s step-end infinite;
     }
     
     @keyframes blink-caret-secondary {
         from, to { border-color: transparent }
-        50% { border-color: var(--secondary-color) }
-    }
-    
-    .tagline::after {
-        content: '';
-        margin-left: 2px;
-        opacity: 1;
-        color: var(--secondary-color);
-    }
-    
-    .tagline.typing-done {
-        border-right: none;
+        50% { border-color: var(--secondary-color); }
     }
     
     .cta-buttons {
@@ -628,7 +549,7 @@
             </div>
             
             <div id="landing-text" class="landing-text">
-                <span class="typewriter" data-text="Software built different">Software built different</span>
+                Software built different
             </div>
             
             <p id="tagline" class="tagline" style="visibility: hidden;">
