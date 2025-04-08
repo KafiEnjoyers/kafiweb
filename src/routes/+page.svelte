@@ -1,7 +1,6 @@
 <script>
     import { onMount } from 'svelte';
     import { base } from '$app/paths';
-    import { typewriterAnimation } from '$lib/textAnimation';
     import { fadeIn, slideUp } from '$lib/animations';
 
     // Metadata for SEO
@@ -32,24 +31,63 @@
     let servicesSection;
     
     onMount(() => {
-        // 应用其他动画
-        if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
-        if (servicesSection) slideUp(servicesSection, { delay: 1500, duration: 0.8 });
+        // 应用打字机效果
+        const typewriterElement = document.querySelector('.typewriter');
+        if (typewriterElement) {
+            const text = typewriterElement.getAttribute('data-text');
+            typewriterAnimation(typewriterElement, text, { speed: 120 });
+        }
         
         // 显示副标语
         setTimeout(() => {
             const tagline = document.querySelector('#tagline');
             if (tagline) {
                 tagline.style.visibility = 'visible';
-                typewriterAnimation('#tagline', {
-                    speed: 60,
-                    delay: 10,
-                    onComplete: (el) => {
-                        el.classList.add('typing-done');
-                    }
-                });
+                const taglineText = tagline.textContent.trim();
+                typewriterAnimation(tagline, taglineText, { speed: 80 });
             }
-        }, 1000);
+        }, 4000); // 等待主标题打字机效果完成
+        
+        // 自定义打字机效果函数
+        function typewriterAnimation(element, text, options = {}) {
+            if (typeof element === 'string') {
+                element = document.querySelector(element);
+            }
+            
+            if (!element) return;
+            
+            // 默认选项
+            const speed = options.speed || 100; // 打字速度
+            const onComplete = options.onComplete || null; // 完成回调
+            
+            // 清空元素内容
+            element.textContent = '';
+            element.style.visibility = 'visible';
+            
+            // 逐字添加文本
+            let i = 0;
+            
+            function typeNextChar() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeNextChar, speed);
+                } else {
+                    // 打字完成
+                    element.classList.add('typing-done');
+                    if (typeof onComplete === 'function') {
+                        onComplete(element);
+                    }
+                }
+            }
+            
+            // 开始打字
+            typeNextChar();
+        }
+
+        // 应用其他动画
+        if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
+        if (servicesSection) slideUp(servicesSection, { delay: 1500, duration: 0.8 });
         
         // Animate service cards on scroll
         const observer = new IntersectionObserver((entries) => {
@@ -78,19 +116,21 @@
         color: var(--accent-color);
         position: relative;
         text-align: center;
-        animation: fadeInUp 1.2s ease-out forwards;
-        opacity: 0;
     }
     
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .typewriter {
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+        border-right: 3px solid var(--accent-color);
+        white-space: nowrap;
+        margin: 0 auto;
+        animation: blink-caret 0.75s step-end infinite;
+    }
+    
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: var(--accent-color) }
     }
     .hero-section {
         min-height: 100vh;
@@ -163,23 +203,27 @@
         line-height: 1.6;
         color: var(--secondary-color);
         position: relative;
+        border-right: 2px solid var(--secondary-color);
+        white-space: nowrap;
+        overflow: hidden;
+        display: inline-block;
+        animation: blink-caret-secondary 0.75s step-end infinite;
+    }
+    
+    @keyframes blink-caret-secondary {
+        from, to { border-color: transparent }
+        50% { border-color: var(--secondary-color) }
     }
     
     .tagline::after {
-        content: '|';
+        content: '';
         margin-left: 2px;
         opacity: 1;
         color: var(--secondary-color);
-        animation: cursor-blink 1s infinite;
     }
     
-    @keyframes cursor-blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
-    }
-    
-    .tagline.typing-done::after {
-        display: none;
+    .tagline.typing-done {
+        border-right: none;
     }
     
     .cta-buttons {
@@ -550,7 +594,7 @@
             </div>
             
             <div id="landing-text" class="landing-text">
-                Software built different
+                <span class="typewriter" data-text="Software built different"></span>
             </div>
             
             <p id="tagline" class="tagline" style="visibility: hidden;">
