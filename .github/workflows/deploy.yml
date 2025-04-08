@@ -43,12 +43,8 @@ jobs:
           ls -la
           echo "SvelteKit output directory:"
           find . -type d -name build
-          echo "Build directory content (if exists):"
-          ls -la build || echo "Build directory does not exist"
-          echo "Ensuring build directory exists:"
-          mkdir -p build
-          echo "Creating test file in build directory:"
-          echo "<html><body><h1>Test Page</h1></body></html>" > build/index.html
+          echo "Build directory content:"
+          ls -la build
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
