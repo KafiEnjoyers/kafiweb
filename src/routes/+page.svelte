@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { base } from '$app/paths';
-    import { typewriterAnimation, initTypewriter, repeatTypewriter } from '$lib/textAnimation';
+    import { typewriterAnimation } from '$lib/textAnimation';
     import { fadeIn, slideUp } from '$lib/animations';
 
     // Metadata for SEO
@@ -32,15 +32,11 @@
     let servicesSection;
     
     onMount(() => {
-        // 运行打字效果
-        // 确保直接在挂载时初始化打字机效果
-        const typewriterElement = document.querySelector('.typewriter-text');
-        if (typewriterElement) {
-            // 直接在元素上应用打字效果，不经过选择器
-            repeatTypewriter(typewriterElement, "Software built different", 70);
-        }
+        // 应用其他动画
+        if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
+        if (servicesSection) slideUp(servicesSection, { delay: 1500, duration: 0.8 });
         
-        // 等待主标语完成后显示副标语
+        // 显示副标语
         setTimeout(() => {
             const tagline = document.querySelector('#tagline');
             if (tagline) {
@@ -53,11 +49,7 @@
                     }
                 });
             }
-        }, 2000);
-        
-        // 应用其他动画
-        if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
-        if (servicesSection) slideUp(servicesSection, { delay: 1500, duration: 0.8 });
+        }, 1000);
         
         // Animate service cards on scroll
         const observer = new IntersectionObserver((entries) => {
@@ -78,30 +70,14 @@
 </script>
 
 <style>
-    /* 首页打字机样式 */
-    .typewriter-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    
-    .typewriter-text {
-        display: inline-block;
-        min-height: 2.5rem; /* 确保高度稳定 */
-        min-width: 2ch; /* 确保宽度至少有光标空间 */
+    /* Landing Text Styles */
+    .landing-text {
         font-size: 2.5rem;
         font-weight: 600;
+        margin-bottom: 1.5rem;
         color: var(--accent-color);
-        border-right: 3px solid var(--accent-color);
-        animation: blink-caret 0.75s step-end infinite;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-    
-    @keyframes blink-caret {
-        from, to { border-color: transparent; }
-        50% { border-color: var(--accent-color); }
+        position: relative;
+        text-align: center;
     }
     .hero-section {
         min-height: 100vh;
@@ -160,17 +136,10 @@
     .landing-text {
         font-size: 2.5rem;
         font-weight: 600;
-        margin-bottom: 1rem; /* 减小底部间距 */
+        margin-bottom: 1.5rem;
         color: var(--accent-color);
         position: relative;
-    }
-    
-    .landing-text::after {
-        content: '|';
-        margin-left: 5px;
-        opacity: 1;
-        color: var(--accent-color);
-        animation: cursor-blink 1s infinite;
+        text-align: center;
     }
     
     .tagline {
@@ -191,15 +160,13 @@
         animation: cursor-blink 1s infinite;
     }
     
-    .landing-text.typing-done::after,
-    .tagline.typing-done::after {
-        /* 打字结束后隐藏光标 */
-        display: none;
-    }
-    
     @keyframes cursor-blink {
         0%, 100% { opacity: 1; }
         50% { opacity: 0; }
+    }
+    
+    .tagline.typing-done::after {
+        display: none;
     }
     
     .cta-buttons {
@@ -569,8 +536,8 @@
                 <div class="logo-glow"></div>
             </div>
             
-            <div id="landing-text" class="landing-text typewriter-container" style="visibility: visible;">
-                <span class="typewriter-text"></span>
+            <div id="landing-text" class="landing-text">
+                Software built different
             </div>
             
             <p id="tagline" class="tagline" style="visibility: hidden;">
