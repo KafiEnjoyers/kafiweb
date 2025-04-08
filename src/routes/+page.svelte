@@ -31,50 +31,29 @@
     let heroSection;
     let servicesSection;
     
-    // Run typing effect immediately without waiting for onMount
-    function runTypingEffect() {
-        // 确保DOM已加载
-        if (typeof document !== 'undefined') {
-            setTimeout(() => {
-                const landingText = document.querySelector('#landing-text');
-                if (landingText) {
-                    landingText.style.visibility = 'visible';
-                    typewriterAnimation('#landing-text', {
-                        speed: 70,
-                        delay: 10, // 几乎立即开始
-                        onComplete: (element) => {
-                            element.classList.add('typing-done');
-                            
-                            // 主标语结束后开始副标语
-                            setTimeout(() => {
-                                const tagline = document.querySelector('#tagline');
-                                if (tagline) {
-                                    tagline.style.visibility = 'visible';
-                                    typewriterAnimation('#tagline', {
-                                        speed: 60,
-                                        delay: 10,
-                                        onComplete: (el) => {
-                                            el.classList.add('typing-done');
-                                        }
-                                    });
-                                }
-                            }, 300);
-                        }
-                    });
-                }
-            }, 500); // 给页面一点时间加载
-        }
-    }
-    
     onMount(() => {
         // 运行打字效果
-        initTypewriter();
-        
-        // 也可以直接在这里初始化循环打字效果
+        // 确保直接在挂载时初始化打字机效果
         const typewriterElement = document.querySelector('.typewriter-text');
         if (typewriterElement) {
+            // 直接在元素上应用打字效果，不经过选择器
             repeatTypewriter(typewriterElement, "Software built different", 70);
         }
+        
+        // 等待主标语完成后显示副标语
+        setTimeout(() => {
+            const tagline = document.querySelector('#tagline');
+            if (tagline) {
+                tagline.style.visibility = 'visible';
+                typewriterAnimation('#tagline', {
+                    speed: 60,
+                    delay: 10,
+                    onComplete: (el) => {
+                        el.classList.add('typing-done');
+                    }
+                });
+            }
+        }, 2000);
         
         // 应用其他动画
         if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
@@ -118,6 +97,11 @@
         animation: blink-caret 0.75s step-end infinite;
         white-space: nowrap;
         overflow: hidden;
+    }
+    
+    @keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: var(--accent-color); }
     }
     .hero-section {
         min-height: 100vh;
@@ -211,6 +195,11 @@
     .tagline.typing-done::after {
         /* 打字结束后隐藏光标 */
         display: none;
+    }
+    
+    @keyframes cursor-blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
     }
     
     .cta-buttons {

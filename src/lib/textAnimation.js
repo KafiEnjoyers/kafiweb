@@ -2,40 +2,10 @@
 
 import { gsap } from 'gsap';
 
-// 主动调用打字机效果的函数
+// 此函数被简化并直接在组件中实现
 export function initTypewriter() {
-    if (typeof document === 'undefined') return;
-
-    // 检查页面在加载完成后是否已经初始化了打字机效果
-    if (document.querySelector('#typing-initialized')) return;
-
-    // 添加一个标记元素来表示我们已经初始化了打字机效果
-    const marker = document.createElement('div');
-    marker.id = 'typing-initialized';
-    marker.style.display = 'none';
-    document.body.appendChild(marker);
-
-    // 获取需要应用打字机效果的元素
-    const landingText = document.querySelector('#landing-text .typewriter-text');
-    if (landingText) {
-        const text = "Software built different";
-        repeatTypewriter(landingText, text, 70);
-    }
-
-    // 获取副标语元素
-    setTimeout(() => {
-        const tagline = document.querySelector('#tagline');
-        if (tagline) {
-            tagline.style.visibility = 'visible';
-            typewriterAnimation('#tagline', {
-                speed: 60,
-                delay: 10,
-                onComplete: (el) => {
-                    el.classList.add('typing-done');
-                }
-            });
-        }
-    }, 2000);
+    console.warn('initTypewriter() is deprecated. Please use repeatTypewriter() directly');
+    return;
 }
 
 // 循环打字效果函数
