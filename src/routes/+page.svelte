@@ -32,13 +32,28 @@
     let servicesSection;
     
     onMount(() => {
-        // Initialize typewriter animation with custom options
+        // 初始化主标语打字动画
         typewriterAnimation('#landing-text', {
             speed: 70,
-            delay: 800
+            delay: 800,
+            onComplete: (element) => {
+                // 主标语打字效果完成后的回调
+                element.classList.add('typing-done');
+                
+                // 开始副标语的打字效果
+                setTimeout(() => {
+                    typewriterAnimation('#tagline', {
+                        speed: 60,
+                        delay: 100,
+                        onComplete: (el) => {
+                            el.classList.add('typing-done');
+                        }
+                    });
+                }, 400); // 短暂延迟后开始副标语
+            }
         });
         
-        // Apply additional animations
+        // 应用其他动画
         if (heroSection) fadeIn(heroSection, { delay: 200, duration: 1 });
         if (servicesSection) slideUp(servicesSection, { delay: 1500, duration: 0.8 });
         
@@ -80,7 +95,7 @@
                 Software built different
             </div>
             
-            <p class="tagline">Software built different</p>
+            <p id="tagline" class="tagline" style="visibility: hidden;">Building innovative solutions</p>
             
             <div class="cta-buttons">
                 <a href="#contact" class="btn primary-btn">Get in touch</a>
@@ -207,9 +222,21 @@
     .landing-text {
         font-size: 2.5rem;
         font-weight: 600;
-        margin-bottom: 1.5rem;
-        color: var(--secondary-color);
+        margin-bottom: 1rem; /* 减小底部间距 */
+        color: var(--accent-color);
         position: relative;
+    }
+    
+    .landing-text::after {
+        content: '|';
+        margin-left: 5px;
+        opacity: 1;
+        animation: cursor-blink 1s infinite;
+    }
+    
+    @keyframes cursor-blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
     }
     
     .tagline {
@@ -218,6 +245,21 @@
         margin: 0 auto 3rem;
         opacity: 0.9;
         line-height: 1.6;
+        color: var(--secondary-color);
+        position: relative;
+    }
+    
+    .tagline::after {
+        content: '|';
+        margin-left: 2px;
+        opacity: 1;
+        animation: cursor-blink 1s infinite;
+    }
+    
+    .landing-text.typing-done::after,
+    .tagline.typing-done::after {
+        /* 打字结束后隐藏光标 */
+        display: none;
     }
     
     .cta-buttons {

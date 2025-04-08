@@ -19,7 +19,8 @@ export function typewriterAnimation(elementId, options = {}) {
         const config = {
             speed: options.speed || 70,          // Typing speed in ms
             initialDelay: options.delay || 300,  // Initial delay before typing starts
-            cursor: options.cursor !== false      // Whether to show cursor
+            cursor: options.cursor !== false,     // Whether to show cursor
+            onComplete: options.onComplete || null // Callback function when typing is complete
         };
         
         const text = element.textContent;
@@ -43,6 +44,11 @@ export function typewriterAnimation(elementId, options = {}) {
                         duration: 0.5,
                         ease: 'power1.out'
                     });
+                    
+                    // Execute onComplete callback if provided
+                    if (typeof config.onComplete === 'function') {
+                        config.onComplete(element);
+                    }
                 }
             }, config.speed);
         }, config.initialDelay);
